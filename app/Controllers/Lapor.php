@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\laporModel;
+use CodeIgniter\HTTP\Request;
 use CodeIgniter\Model;
 
 class Lapor extends BaseController
@@ -31,7 +32,7 @@ class Lapor extends BaseController
 
         // $laporModel = new \App\Models\laporModel();
 
-        return view('lapor/index', $data);
+        return view('pages/home', $data);
     }
 
     public function detail($id)
@@ -42,7 +43,7 @@ class Lapor extends BaseController
         ];
 
         if (empty($data['lapor'])) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan dengan id ' . $id . ' tidak ditemukan');
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan ' . $id . ' tidak ditemukan');
         }
 
         return \view('lapor/detail', $data);
@@ -79,6 +80,37 @@ class Lapor extends BaseController
         ]);
         // \dd($this->request->getVar());
         return \redirect()->to('/lapor');
+    }
+
+    public function delete($id)
+    {
+        $this->laporModel->delete($id);
+        return redirect()->to('/lapor');
+    }
+
+
+    public function edit($id)
+    {
+        $data = [
+            'judul' => "Buat Laporan",
+            'lapor' => $this->laporModel->getLapor($id)
+        ];
+        return \view('lapor/edit', $data);
+    }
+
+    public function update($id)
+    {
+        date_default_timezone_set("Asia/Jakarta");
+        $this->laporModel->save([
+            'id' => $id,
+            'nama' => $this->request->getVar('nama'),
+            'isi' =>  $this->request->getVar('isi'),
+            'aspek' => $this->request->getVar('aspek'),
+            'lampiran' => $this->request->getVar('lampiran'),
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        // \dd($this->request->getVar());
+        return \redirect()->to('/lapor/' . $id);
     }
 
 

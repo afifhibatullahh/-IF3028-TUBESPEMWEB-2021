@@ -16,7 +16,7 @@
             <div class="card-footer text-muted">
                 <span>Lampiran : <?= $k['lampiran']; ?></span>
                 <span><?= $k['created_at']; ?></span>
-                <a href="/lapor/detail/<?= $k['id']; ?>" class="btn btn-primary">Lihat Selengkapnya</a>
+                <a href="/lapor/<?= $k['id']; ?>" class="btn btn-primary">Lihat Selengkapnya</a>
             </div>
         </div>
     <?php endforeach; ?>
