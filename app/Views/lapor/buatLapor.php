@@ -2,22 +2,23 @@
 <?= $this->section('content'); ?>
 
 <div class="container">
-
-    <h1>SIMPLE LAPOR!</h1>
-
-    <form action="/lapor/save" method="post">
+    <header>
+        <h1>SIMPLE LAPOR!</h1>
+    </header>
+    <p>Buat Laporan/Komentar</p>
+    <hr>
+    <form action="/lapor/save" method="post" enctype="multipart/form-data">
         <?= csrf_field(); ?>
-        <div class="form-group">
-            <label for="nama">Nama </label>
-            <input type="text" class="form-control" id="nama" name="nama" placeholder="nama anda.." required>
+        <div class="input-nama">
+            <input type="text" id="nama" name="nama" placeholder="Masukan Nama Pelapor.." required>
         </div>
 
-        <div class="form-group">
-            <textarea class="form-control" id="isi" name="isi" rows="3" required></textarea>
+        <div>
+            <textarea id="isi" name="isi" rows="3" required></textarea>
         </div>
 
-        <div class="form-group">
-            <select class="form-control" id="aspek" name="aspek" required>
+        <div class="pilihAspek">
+            <select id="aspek" name="aspek" required>
                 <option value="" disabled selected hidden>Pilih Aspek Pelaporan/Komentar</option>
                 <option>Dosen</option>
                 <option>Staff</option>
@@ -27,11 +28,17 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <input type="file" class="form-control-file" id="lampiran" name="lampiran">
+        <div class="inputLampiran">
+            <input type="file" id="lampiran" name="lampiran" required>
         </div>
-        <a href="/" class="btn btn-primary">Kembali</a>
-        <button type="submit" class="btn btn-success" onclick="return confirm('yakin tambah?')">Buat LAPOR!</button>
+        <div class="btn">
+            <a class="btn-back" href="/">Kembali</a>
+            <button class="btn-lapor" type=" submit" onclick="return confirm('yakin tambah?')">Buat LAPOR!</button>
+        </div>
+        <div class="clearfix"></div>
+        <div class="hr-create">
+            <hr>
+        </div>
     </form>
 
 </div>

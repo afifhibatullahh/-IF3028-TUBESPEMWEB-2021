@@ -17,10 +17,20 @@ class Lapor extends BaseController
 
     public function index()
     {
-        // $lapor = $this->getLapor->findAll();
+
+        $cari = $this->request->getVar('cari');
+
+        if ($cari) {
+            $lapor = $this->laporModel->search($cari);
+        } else {
+            $lapor = $this->laporModel->orderBy('id', 'DESC');
+        }
+
         $data = [
             'judul' => 'LAPOR! - Layanan Aspirasi Masyarakat',
-            'lapor' => $this->laporModel->getLapor()
+
+            'lapor' => $lapor->paginate(5, 'lapor'),
+            'pager' => $lapor->pager
         ];
 
         // //konek database
@@ -32,7 +42,7 @@ class Lapor extends BaseController
 
         // $laporModel = new \App\Models\laporModel();
 
-        return view('pages/home', $data);
+        return view('lapor/index', $data);
     }
 
     public function detail($id)
@@ -51,12 +61,16 @@ class Lapor extends BaseController
 
     public function laporan()
     {
+
+        $lapor = $this->laporModel->orderBy('id', 'DESC');
+
         $data = [
             'judul' => 'LAPOR! - Layanan Aspirasi Masyarakat',
-            'lapor' => $this->laporModel->getLapor()
+
+            'lapor' => $lapor->paginate(5, 'lapor'),
+            'pager' => $lapor->pager
         ];
 
-        // \dd($this->laporModel->getLapor());
         return view('lapor/laporan', $data);
     }
 
@@ -70,20 +84,38 @@ class Lapor extends BaseController
 
     public function save()
     {
+
+        //ambil gambar
+        $fileLampiran = $this->request->getFile('lampiran');
+
+        if ($fileLampiran->getError() == 4) {
+            $namaLampiran = 'Lampiran Kosong';
+        } else {
+            // pindahkan gambar ke folder img
+            $namaLampiran = $fileLampiran->getRandomName();
+            $fileLampiran->move('img', $namaLampiran);
+        }
+
         date_default_timezone_set("Asia/Jakarta");
         $this->laporModel->save([
             'nama' => $this->request->getVar('nama'),
             'isi' =>  $this->request->getVar('isi'),
             'aspek' => $this->request->getVar('aspek'),
-            'lampiran' => $this->request->getVar('lampiran'),
+            'lampiran' => $namaLampiran,
             'created_at' => date("Y-m-d H:i:s")
         ]);
-        // \dd($this->request->getVar());
         return \redirect()->to('/lapor');
     }
 
     public function delete($id)
     {
+        $lapor = $this->laporModel->find($id);
+
+        if ($lapor['lampiran'] != 'Lampiran Kosong') {
+            unlink('img/' . $lapor['lampiran']);
+        }
+
+
         $this->laporModel->delete($id);
         return redirect()->to('/lapor');
     }
@@ -101,19 +133,25 @@ class Lapor extends BaseController
     public function update($id)
     {
         date_default_timezone_set("Asia/Jakarta");
+
+        $fileLampiran = $this->request->getFile('lampiran');
+
+        if ($fileLampiran->getError() == 4) {
+            $namaLampiran = $this->request->getVar('lampiranLama');
+        } else {
+            $namaLampiran = $fileLampiran->getRandomName();
+            $fileLampiran->move('img', $namaLampiran);
+        }
+
+
         $this->laporModel->save([
             'id' => $id,
             'nama' => $this->request->getVar('nama'),
             'isi' =>  $this->request->getVar('isi'),
             'aspek' => $this->request->getVar('aspek'),
-            'lampiran' => $this->request->getVar('lampiran'),
+            'lampiran' => $namaLampiran,
             'updated_at' => date("Y-m-d H:i:s")
         ]);
-        // \dd($this->request->getVar());
         return \redirect()->to('/lapor/' . $id);
     }
-
-
-    //--------------------------------------------------------------------
-
 }

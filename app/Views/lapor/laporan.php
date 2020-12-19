@@ -2,24 +2,35 @@
 <?= $this->section('content'); ?>
 
 <div class="container">
-    <h1>SIMPLE LAPOR!</h1>
+    <a href="/lapor">
+        <header>
+            <h1>SIMPLE LAPOR!</h1>
+        </header>
+    </a>
 
+    <div class="wrap">
+        <div class="konten">
+            <span>
+                Laporan/Komentar Terakhir
+            </span>
+            <hr>
+        </div>
+    </div>
     <?php foreach ($lapor as $k) : ?>
-        <div class="card text-center mb-3">
-            <div class="card-header">
-                <?= $k['nama']; ?>
-            </div>
-            <div class="card-body">
-                <p class="card-text"><?= $k['isi']; ?></p>
-
-            </div>
-            <div class="card-footer text-muted">
-                <span>Lampiran : <?= $k['lampiran']; ?></span>
-                <span><?= $k['created_at']; ?></span>
-                <a href="/lapor/<?= $k['id']; ?>" class="btn btn-primary">Lihat Selengkapnya</a>
+        <div class="wrap">
+            <div class="konten">
+                <p class="isi"><?= $k['isi']; ?></p>
+                <div class="clearfix"></div>
+                <span class="lampiran">Lampiran: <?= $k['lampiran']; ?></span>
+                <a class="detail" href="/lapor/<?= $k['id']; ?>" class="btn btn-primary">Lihat Selengkapnya →</a>
+                <span class="waktu">Waktu: <?= $k['created_at']; ?></span>
             </div>
         </div>
+        <div class="clearfix"></div>
+        <hr>
     <?php endforeach; ?>
+
+    <?= $pager->links('lapor', 'lapor_pagination'); ?>
 
 </div>
 

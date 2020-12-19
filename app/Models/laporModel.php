@@ -14,8 +14,19 @@ class laporModel extends Model
     public function getLapor($id = false)
     {
         if ($id == false) {
-            return $this->findAll();
+            // $this->db->order_by('id', 'DESC');
+            // $query = $this->db->get('laporan');
+            // return $query->result_array();
+            // $this->order_by('id', "DESC");
+            return $this->orderBy('id', 'DESC')->findAll();
         }
         return $this->where(['id' => $id])->first();
+    }
+
+    public function search($cari)
+    {
+        $builder = $this->table('lapor')->like('nama', $cari);
+        $builder = $this->table('lapor')->orLike('aspek', $cari);
+        return $builder;
     }
 }

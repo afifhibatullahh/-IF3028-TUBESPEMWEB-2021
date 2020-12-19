@@ -31,7 +31,7 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Pages::home');
+$routes->get('/', 'Lapor::index');
 $routes->delete('/lapor/(:num)', 'Lapor::delete/$1');
 $routes->get('/lapor/laporan', 'Lapor::laporan');
 $routes->get('/lapor/edit/(:num)', 'Lapor::edit/$1');
